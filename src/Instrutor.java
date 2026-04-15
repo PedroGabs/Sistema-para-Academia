@@ -1,13 +1,13 @@
 public class Instrutor extends Pessoa{
-    private String curso;
+    private Plano plano;
     private Aluno aluno;
 
-    public String getCurso(){
-        return curso;
+    public Plano getPlano(){
+        return plano;
     }
 
-    public void setCurso(String curso){
-        this.curso = curso;
+    public void setPlano(Plano plano){
+        this.plano = plano;
     }
 
     public Aluno getAluno(){

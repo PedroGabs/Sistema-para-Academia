@@ -1,6 +1,6 @@
 public class Aluno extends Pessoa{
     private Instrutor instrutor;
-    private String curso;
+    private Plano plano;
 
     public Instrutor getInstrutor(){
         return instrutor;
@@ -10,11 +10,11 @@ public class Aluno extends Pessoa{
         this.instrutor = instrutor;
     }
 
-    public String getCurso(){
-        return curso;
+    public Plano getPlano(){
+        return plano;
     }
 
-    public void setCurso(String curso){
-        this.curso = curso;
+    public void setPlano(Plano plano){
+        this.plano = plano;
     }
 }
