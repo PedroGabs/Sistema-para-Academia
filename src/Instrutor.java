@@ -1,20 +1,24 @@
-public class Instrutor extends Pessoa{
-    private Plano plano;
-    private Aluno aluno;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Plano getPlano(){
-        return plano;
+public class Instrutor extends Pessoa {
+    private List<Aluno> alunos = new ArrayList<>();
+
+    public Instrutor(String nome) {
+        super(nome, 0); // ou remove idade se não usar
     }
 
-    public void setPlano(Plano plano){
-        this.plano = plano;
+    public List<Aluno> getAlunos() {
+        return alunos;
     }
 
-    public Aluno getAluno(){
-        return aluno;
+    public void adicionarAluno(Aluno aluno) {
+        alunos.add(aluno);
     }
 
-    public void setAluno(Aluno aluno){
-        this.aluno = aluno;
+    @Override
+    public String toString() {
+        return "Instrutor: " + getNome() +
+               " | Total de alunos: " + alunos.size();
     }
 }

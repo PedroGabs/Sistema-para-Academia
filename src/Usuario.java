@@ -1,5 +1,10 @@
 public class Usuario extends Pessoa {
 
+    public Usuario(String nome2, int i) {
+        super(nome2, i);
+        //TODO Auto-generated constructor stub
+    }
+
     private String login;
     private String senha;
 

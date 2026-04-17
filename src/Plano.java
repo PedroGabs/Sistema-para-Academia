@@ -1,18 +1,11 @@
 public class Plano {
+    private String nome;
 
-    private TipoPlanos tipo;
-    private double valor;
-
-    public Plano(TipoPlanos tipo, double valor) {
-        this.tipo = tipo;
-        this.valor = valor;
+    public Plano(String nome) {
+        this.nome = nome;
     }
 
-    public TipoPlanos getTipo() {
-        return tipo;
-    }
-
-    public double getValor() {
-        return valor;
+    public String getNome() {
+        return nome;
     }
 }
