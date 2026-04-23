@@ -12,6 +12,11 @@ public class Pessoa {
         this.idade = idade;
     }
 
+    public void exibirInfo() {
+    System.out.println("Nome: " + nome);
+    System.out.println("Idade: " + idade);
+}
+
     public Long getId() {
         return id;
     }

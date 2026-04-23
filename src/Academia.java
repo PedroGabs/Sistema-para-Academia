@@ -17,7 +17,6 @@ public class Academia {
     public void adicionarAluno(Aluno aluno) {
         alunos.add(aluno);
 
-        // 🔥 vincular automaticamente ao instrutor
         if (instrutor != null) {
             aluno.setInstrutor(instrutor);
             instrutor.adicionarAluno(aluno);

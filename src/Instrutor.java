@@ -4,8 +4,14 @@ import java.util.List;
 public class Instrutor extends Pessoa {
     private List<Aluno> alunos = new ArrayList<>();
 
-    public Instrutor(String nome) {
-        super(nome, 0); // ou remove idade se não usar
+    public Instrutor(String nome, int idade) {
+        super(nome, idade);
+    }
+
+    @Override
+    public void exibirInfo() {
+        super.exibirInfo();
+        System.out.println("Total de alunos: " + alunos.size());
     }
 
     public List<Aluno> getAlunos() {
@@ -19,6 +25,6 @@ public class Instrutor extends Pessoa {
     @Override
     public String toString() {
         return "Instrutor: " + getNome() +
-               " | Total de alunos: " + alunos.size();
+                " | Total de alunos: " + alunos.size();
     }
 }

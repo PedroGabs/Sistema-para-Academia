@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class Main {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static ArrayList<Aluno> alunos = new ArrayList<>();
+    private static ArrayList<Pessoa> pessoas = new ArrayList<>();
     private static Instrutor instrutor;
 
     public static void main(String[] args) {
@@ -13,14 +13,14 @@ public class Main {
         do {
             exibirMenu();
             opcao = scanner.nextInt();
-            scanner.nextLine(); // limpar buffer
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1:
                     cadastrarAluno();
                     break;
                 case 2:
-                    listarAlunos();
+                    listarPessoas();
                     break;
                 case 3:
                     definirInstrutor();
@@ -43,7 +43,7 @@ public class Main {
     private static void exibirMenu() {
         System.out.println("\n=== SISTEMA DE ACADEMIA ===");
         System.out.println("1. Cadastrar Aluno");
-        System.out.println("2. Listar Alunos");
+        System.out.println("2. Listar Pessoas");
         System.out.println("3. Definir Instrutor");
         System.out.println("4. Ver Instrutor");
         System.out.println("0. Sair");
@@ -60,21 +60,25 @@ public class Main {
         int idade = scanner.nextInt();
         scanner.nextLine();
 
-        // ✅ corrigido (passando dados)
         Aluno aluno = new Aluno(nome, idade);
-        alunos.add(aluno);
 
+        if (instrutor != null) {
+            aluno.setInstrutor(instrutor);
+        }
+
+        pessoas.add(aluno); 
         System.out.println("Aluno cadastrado com sucesso!");
     }
 
-    private static void listarAlunos() {
-        System.out.println("\n--- LISTA DE ALUNOS ---");
+    private static void listarPessoas() {
+        System.out.println("\n--- LISTA ---");
 
-        if (alunos.isEmpty()) {
-            System.out.println("Nenhum aluno cadastrado.");
+        if (pessoas.isEmpty()) {
+            System.out.println("Nenhum cadastro.");
         } else {
-            for (Aluno a : alunos) {
-                System.out.println(a); // agora vai funcionar com toString()
+            for (Pessoa p : pessoas) {
+                p.exibirInfo(); 
+                System.out.println("-------------------");
             }
         }
     }
@@ -85,9 +89,13 @@ public class Main {
         System.out.print("Nome do instrutor: ");
         String nome = scanner.nextLine();
 
-        // ✅ corrigido (passando nome)
-        instrutor = new Instrutor(nome);
+        System.out.print("Idade: ");
+        int idade = scanner.nextInt();
+        scanner.nextLine();
 
+        instrutor = new Instrutor(nome, idade);
+
+        pessoas.add(instrutor); 
         System.out.println("Instrutor definido com sucesso!");
     }
 
@@ -97,7 +105,7 @@ public class Main {
         if (instrutor == null) {
             System.out.println("Nenhum instrutor definido.");
         } else {
-            System.out.println(instrutor);
+            instrutor.exibirInfo();
         }
     }
 }
