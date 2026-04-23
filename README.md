@@ -1,4 +1,4 @@
-# 🏋️ Sistema de Academia - CP2
+# 🏋️ Sistema de Academia 
 
 ## 👥 Integrantes do Grupo
 
