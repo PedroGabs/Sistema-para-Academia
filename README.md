@@ -1,4 +1,4 @@
-# 🏋️ Sistema de Academia 
+# 🏋️ Sistema de Academia - CP2
 
 ## 👥 Integrantes do Grupo
 
@@ -29,9 +29,11 @@ Nesta segunda etapa (CP2), o foco principal foi a aplicação de conceitos de Pr
 
 ### 🔹 Herança
 
+```
 Pessoa (superclasse)
 ├── Aluno (subclasse)
 └── Instrutor (subclasse)
+```
 
 ---
 
