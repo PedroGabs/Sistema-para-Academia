@@ -1,7 +1,7 @@
 # [Sistema de Academia] - [Academia de Pilates]
  
 ## 👥 Integrantes do Grupo
-- Alexsandro Mauricio Silva Vasconcelos
+- Alexsandro Mauricio Silva Vasconcelos - 42037514 
 - Matheus Henrique Teixiera Santos - 43608124
 - Pedro Gabriel Castro da Silva - 428321522 
 - Tharik lima da Silva - 43676642
