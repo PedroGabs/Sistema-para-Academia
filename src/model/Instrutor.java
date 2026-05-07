@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,11 @@ public class Instrutor extends Pessoa {
         System.out.println("Total de alunos: " + alunos.size());
     }
 
+    @Override
+    public void exibirPermissoes() {
+        System.out.println("[Instrutor] Permissões: cadastrar alunos, criar treinos, visualizar pagamentos.");
+    }
+
     public List<Aluno> getAlunos() {
         return alunos;
     }
@@ -25,6 +32,6 @@ public class Instrutor extends Pessoa {
     @Override
     public String toString() {
         return "Instrutor: " + getNome() +
-                " | Total de alunos: " + alunos.size();
+               " | Total de alunos: " + alunos.size();
     }
 }

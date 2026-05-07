@@ -1,3 +1,4 @@
+package model;
 public class Usuario extends Pessoa {
 
     public Usuario(String nome2, int i) {
@@ -21,5 +22,11 @@ public class Usuario extends Pessoa {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    @Override
+    public void exibirPermissoes() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'exibirPermissoes'");
     }
 }

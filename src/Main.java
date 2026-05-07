@@ -1,4 +1,9 @@
 import java.util.Scanner;
+
+import model.Aluno;
+import model.Instrutor;
+import model.Pessoa;
+
 import java.util.ArrayList;
 
 public class Main {

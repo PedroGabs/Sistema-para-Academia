@@ -1,4 +1,5 @@
-public class Pessoa {
+package model;
+public abstract class Pessoa {
     private Long id;
     private String nome;
     private String cpf;
@@ -15,7 +16,9 @@ public class Pessoa {
     public void exibirInfo() {
     System.out.println("Nome: " + nome);
     System.out.println("Idade: " + idade);
-}
+    }
+
+    public abstract void exibirPermissoes();
 
     public Long getId() {
         return id;

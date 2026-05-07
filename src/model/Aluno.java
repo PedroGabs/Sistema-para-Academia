@@ -1,5 +1,6 @@
-public class Aluno extends Pessoa {
+package model;
 
+public class Aluno extends Pessoa {
     private Instrutor instrutor;
     private Plano plano;
 
@@ -10,14 +11,18 @@ public class Aluno extends Pessoa {
     @Override
     public void exibirInfo() {
         super.exibirInfo();
-
         String nomeInstrutor = (instrutor != null) ? instrutor.getNome() : "Nenhum";
         String nomePlano = (plano != null) ? plano.getNome() : "Sem plano";
-
         System.out.println("Instrutor: " + nomeInstrutor);
         System.out.println("Plano: " + nomePlano);
     }
 
+    @Override
+    public void exibirPermissoes() {
+        System.out.println("[Aluno] Permissões: acessar academia, visualizar treinos, pagar mensalidade.");
+    }
+
+    // Sobrecarga de método
     public void pagarMensalidade() {
         System.out.println(getNome() + " realizou pagamento padrão.");
     }
@@ -32,7 +37,6 @@ public class Aluno extends Pessoa {
 
     public void setInstrutor(Instrutor instrutor) {
         this.instrutor = instrutor;
-
         if (instrutor != null && !instrutor.getAlunos().contains(this)) {
             instrutor.adicionarAluno(this);
         }
@@ -50,10 +54,9 @@ public class Aluno extends Pessoa {
     public String toString() {
         String nomeInstrutor = (instrutor != null) ? instrutor.getNome() : "Nenhum";
         String nomePlano = (plano != null) ? plano.getNome() : "Sem plano";
-
         return "Aluno: " + getNome() +
-                " | Idade: " + getIdade() +
-                " | Instrutor: " + nomeInstrutor +
-                " | Plano: " + nomePlano;
+               " | Idade: " + getIdade() +
+               " | Instrutor: " + nomeInstrutor +
+               " | Plano: " + nomePlano;
     }
 }
