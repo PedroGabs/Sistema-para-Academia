@@ -13,6 +13,18 @@ public class Main {
     private static Instrutor instrutor;
 
     public static void main(String[] args) {
+        // COLOQUE O TESTE AQUI DENTRO:
+        System.out.println("Verificando conexão com o Supabase...");
+        try (java.sql.Connection conn = database.Conexao.getConnection()) {
+            if (conn != null && !conn.isClosed()) {
+                System.out.println("✅ CONEXÃO ESTABELECIDA COM SUCESSO!");
+            } else {
+                System.err.println("❌ FALHA NA CONEXÃO: Verifique seu db.properties");
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("❌ ERRO DE SQL: " + e.getMessage());
+        }
+
         int opcao;
 
         do {
