@@ -1,12 +1,27 @@
 package model;
 
-public class Aluno extends Pessoa {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Aluno extends Pessoa implements Auditavel{
     private Instrutor instrutor;
     private Plano plano;
-
+    private List<String> historico = new ArrayList<>();
     public Aluno(String nome, int idade) {
         super(nome, idade);
     }
+
+    @Override
+    public void registrarLog(String acao) {
+        historico.add(acao);
+        System.out.println("[LOG - Aluno] " + getNome() + ": " + acao);
+    }
+
+    @Override
+    public String obterHistorico() {
+        return historico.toString();
+    }
+
 
     @Override
     public void exibirInfo() {
@@ -16,6 +31,8 @@ public class Aluno extends Pessoa {
         System.out.println("Instrutor: " + nomeInstrutor);
         System.out.println("Plano: " + nomePlano);
     }
+
+
 
     @Override
     public void exibirPermissoes() {

@@ -1,6 +1,19 @@
 package model;
 
-public class Plano {
+public class Plano implements Relatorio{
+    
+  @Override
+    public String gerarResumo() {
+        return "Plano: " + nome + " | Valor: R$ " + valor;
+    }
+
+    @Override
+    public void imprimirDetalhes() {
+        System.out.println("=== DETALHES DO PLANO ===");
+        System.out.println(gerarResumo());
+    }
+
+
     private int id;
     private String nome;
     private double valor;

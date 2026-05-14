@@ -26,7 +26,6 @@ public class Usuario extends Pessoa {
 
     @Override
     public void exibirPermissoes() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'exibirPermissoes'");
     }
 }

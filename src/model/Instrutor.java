@@ -3,9 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Instrutor extends Pessoa {
+public class Instrutor extends Pessoa implements Auditavel{
     private List<Aluno> alunos = new ArrayList<>();
-
+    private List<String> historico = new ArrayList<>();
+    
     public Instrutor(String nome, int idade) {
         super(nome, idade);
     }
@@ -14,6 +15,17 @@ public class Instrutor extends Pessoa {
     public void exibirInfo() {
         super.exibirInfo();
         System.out.println("Total de alunos: " + alunos.size());
+    }
+
+    @Override
+    public void registrarLog(String acao) {
+        historico.add(acao);
+        System.out.println("[LOG - Instrutor] " + getNome() + ": " + acao);
+    }
+
+    @Override
+    public String obterHistorico() {
+        return historico.toString();
     }
 
     @Override

@@ -2,7 +2,20 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Academia {
+public class Academia implements Relatorio{
+
+    @Override
+    public String gerarResumo() {
+        return "Academia | Instrutor: " + (instrutor != null ? instrutor.getNome() : "Nenhum") +
+               " | Total de alunos: " + alunos.size();
+    }
+
+    @Override
+    public void imprimirDetalhes() {
+        System.out.println("=== RELATÓRIO DA ACADEMIA ===");
+        System.out.println(gerarResumo());
+        listarAlunos();
+    }
 
     private Instrutor instrutor;
     private List<Aluno> alunos = new ArrayList<>();
