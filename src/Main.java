@@ -11,6 +11,8 @@ import model.Aula;
 import model.Instrutor;
 import model.Plano;
 import service.InscricaoService;
+import util.ValidadorCPF;
+import util.Formatador;
 
 public class Main {
 
@@ -19,7 +21,6 @@ public class Main {
     private static InstrutorDao instrutorDao = new InstrutorDao();
     private static PlanoDAO planoDAO = new PlanoDAO();
     private static InscricaoService inscricaoService = new InscricaoService();
-
     private static java.util.List<Aula> aulasDisponiveis = new java.util.ArrayList<>();
 
     public static void main(String[] args) {
@@ -41,17 +42,17 @@ public class Main {
             scanner.nextLine();
 
             switch (opcao) {
-                case 1: cadastrarAluno();       break;
-                case 2: listarAlunos();          break;
-                case 3: atualizarAluno();       break;
-                case 4: deletarAluno();         break;
-                case 5: cadastrarInstrutor();   break;
-                case 6: listarInstrutores();    break;
-                case 7: cadastrarPlano();       break;
-                case 8: listarPlanos();          break;
-                case 9: criarAula();            break;
+                case 1:  cadastrarAluno();      break;
+                case 2:  listarAlunos();        break;
+                case 3:  atualizarAluno();      break;
+                case 4:  deletarAluno();        break;
+                case 5:  cadastrarInstrutor();  break;
+                case 6:  listarInstrutores();   break;
+                case 7:  cadastrarPlano();      break;
+                case 8:  listarPlanos();        break;
+                case 9:  criarAula();           break;
                 case 10: inscreverEmAula();     break;
-                case 0: System.out.println("Encerrando sistema..."); break;
+                case 0:  System.out.println("Encerrando sistema..."); break;
                 default: System.out.println("Opção inválida!");
             }
         } while (opcao != 0);
@@ -85,8 +86,13 @@ public class Main {
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
 
-        System.out.print("CPF (000.000.000-00): ");
-        String cpf = scanner.nextLine();
+        String cpf;
+        while (true) {
+            System.out.print("CPF (000.000.000-00): ");
+            cpf = scanner.nextLine();
+            if (ValidadorCPF.validar(cpf)) break;
+            System.out.println("❌ CPF inválido! Tente novamente.");
+        }
 
         System.out.print("Email: ");
         String email = scanner.nextLine();
@@ -108,7 +114,8 @@ public class Main {
 
         System.out.println("Planos disponíveis:");
         for (Plano p : planos) {
-            System.out.println("  [" + p.getId() + "] " + p.getNome() + " - R$ " + p.getValor());
+            System.out.println("  [" + p.getId() + "] " + p.getNome()
+                + " - " + Formatador.formatarDinheiro(p.getValor()));
         }
         System.out.print("ID do plano: ");
         int idPlano = scanner.nextInt();
@@ -143,6 +150,16 @@ public class Main {
     private static void atualizarAluno() {
         System.out.println("\n--- ATUALIZAR ALUNO ---");
 
+        List<Aluno> alunos = alunoDao.buscarTodos();
+        if (alunos.isEmpty()) {
+            System.out.println("Nenhum aluno cadastrado.");
+            return;
+        }
+        System.out.println("Alunos cadastrados:");
+        for (Aluno a : alunos) {
+            System.out.println("  [" + a.getId() + "] " + a.getNome());
+        }
+
         System.out.print("ID do aluno: ");
         Long id = scanner.nextLong();
         scanner.nextLine();
@@ -156,11 +173,34 @@ public class Main {
         System.out.print("Novo telefone: ");
         String tel = scanner.nextLine();
 
+        System.out.print("Novo endereço: ");
+        String endereco = scanner.nextLine();
+
+        String cpf;
+        while (true) {
+            System.out.print("Novo CPF (000.000.000-00): ");
+            cpf = scanner.nextLine();
+            if (ValidadorCPF.validar(cpf)) break;
+            System.out.println("❌ CPF inválido! Tente novamente.");
+        }
+
+        List<Plano> planos = planoDAO.buscarTodos();
+        System.out.println("Planos disponíveis:");
+        for (Plano p : planos) {
+            System.out.println("  [" + p.getId() + "] " + p.getNome()
+                + " - " + Formatador.formatarDinheiro(p.getValor()));
+        }
+        System.out.print("ID do novo plano: ");
+        Long idPlano = scanner.nextLong();
+        scanner.nextLine();
+
         Aluno aluno = new Aluno(nome, 0);
         aluno.setId(id);
         aluno.setEmail(email);
         aluno.setTel(tel);
-        aluno.setIdPlano(1L); 
+        aluno.setEndereco(endereco);
+        aluno.setCpf(cpf);
+        aluno.setIdPlano(idPlano);
 
         alunoDao.atualizar(aluno);
         aluno.registrarLog("Dados atualizados.");
@@ -168,6 +208,17 @@ public class Main {
 
     private static void deletarAluno() {
         System.out.println("\n--- REMOVER ALUNO ---");
+
+        List<Aluno> alunos = alunoDao.buscarTodos();
+        if (alunos.isEmpty()) {
+            System.out.println("Nenhum aluno cadastrado.");
+            return;
+        }
+        System.out.println("Alunos cadastrados:");
+        for (Aluno a : alunos) {
+            System.out.println("  [" + a.getId() + "] " + a.getNome());
+        }
+
         System.out.print("ID do aluno: ");
         Long id = scanner.nextLong();
         scanner.nextLine();
@@ -180,8 +231,13 @@ public class Main {
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
 
-        System.out.print("CPF (000.000.000-00): ");
-        String cpf = scanner.nextLine();
+        String cpf;
+        while (true) {
+            System.out.print("CPF (000.000.000-00): ");
+            cpf = scanner.nextLine();
+            if (ValidadorCPF.validar(cpf)) break;
+            System.out.println("❌ CPF inválido! Tente novamente.");
+        }
 
         System.out.print("Email: ");
         String email = scanner.nextLine();
@@ -231,6 +287,9 @@ public class Main {
 
         Plano plano = new Plano(nome, valor);
         planoDAO.inserir(plano);
+
+        System.out.println("✅ Plano '" + nome + "' cadastrado por "
+            + Formatador.formatarDinheiro(valor));
     }
 
     private static void listarPlanos() {
@@ -241,8 +300,7 @@ public class Main {
             return;
         }
         for (Plano p : planos) {
-            System.out.println(p);
-            p.imprimirDetalhes(); 
+            p.imprimirDetalhes();
             System.out.println("-------------------");
         }
     }
@@ -275,7 +333,10 @@ public class Main {
 
         Aula aula = new Aula(nome, dataHora, capacidade, instrutores.get(idx));
         aulasDisponiveis.add(aula);
-        System.out.println("✅ Aula '" + nome + "' criada com " + capacidade + " vagas!");
+
+        System.out.println("✅ Aula '" + nome + "' criada para "
+            + Formatador.formatarData(dataHora)
+            + " com " + capacidade + " vagas!");
     }
 
     private static void inscreverEmAula() {
@@ -295,7 +356,8 @@ public class Main {
         System.out.println("Alunos:");
         for (int i = 0; i < alunos.size(); i++) {
             System.out.println("  [" + i + "] " + alunos.get(i).getNome()
-                + " | Plano: " + (alunos.get(i).getPlano() != null ? alunos.get(i).getPlano().getNome() : "Nenhum"));
+                + " | Plano: " + (alunos.get(i).getPlano() != null
+                    ? alunos.get(i).getPlano().getNome() : "Nenhum"));
         }
         System.out.print("Número do aluno: ");
         int idxAluno = scanner.nextInt();
@@ -305,7 +367,7 @@ public class Main {
         for (int i = 0; i < aulasDisponiveis.size(); i++) {
             Aula a = aulasDisponiveis.get(i);
             System.out.println("  [" + i + "] " + a.getNome()
-                + " | " + a.getDataHora()
+                + " | " + Formatador.formatarData(a.getDataHora())
                 + " | Vagas: " + a.vagasDisponiveis() + "/" + a.getCapacidadeMaxima());
         }
         System.out.print("Número da aula: ");
