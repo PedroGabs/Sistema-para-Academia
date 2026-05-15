@@ -46,7 +46,6 @@ public abstract class Pessoa {
     public Long getIdPlano() { return idPlano; }
     public void setIdPlano(Long idPlano) { this.idPlano = idPlano; }
 
-    // 👇 Esses dois estavam faltando
     public String getEndereco() { return endereco; }
     public void setEndereco(String endereco) { this.endereco = endereco; }
 

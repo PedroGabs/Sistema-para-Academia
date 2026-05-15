@@ -42,7 +42,7 @@ public class Academia implements Relatorio{
             System.out.println("Nenhum aluno cadastrado.");
             return;
         }
-
+        //agr funciona <3
         for (Aluno a : alunos) {
             String plano = (a.getPlano() != null)
                     ? a.getPlano().getNome()

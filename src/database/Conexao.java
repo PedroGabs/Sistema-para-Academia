@@ -18,7 +18,6 @@ public class Conexao {
             
             String url = props.getProperty("db.url"); 
             
-            // Força o carregamento do driver que você adicionou na pasta lib
             Class.forName("org.postgresql.Driver");
 
             // O DriverManager usa o objeto 'props' para extrair 'user' e 'password' automaticamente

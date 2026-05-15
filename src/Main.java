@@ -35,7 +35,7 @@ public class Main {
     public static void main(String[] args) {
         limparTela();
         printBanner();
-
+        //validando conexão com o banco de dados --- IGNORE ---
         System.out.println(CYAN + "  Verificando conexão com o Supabase..." + RESET);
         try (java.sql.Connection conn = database.Conexao.getConnection()) {
             if (conn != null && !conn.isClosed()) {
@@ -48,7 +48,7 @@ public class Main {
         }
 
         pausar();
-
+        //maquina de estado do menu principal
         int opcao;
         do {
             limparTela();
