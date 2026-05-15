@@ -23,6 +23,12 @@ O sistema permite gerenciar as operações básicas de uma academia: cadastro e 
 
 ---
 
+## Link video
+
+https://youtu.be/qHZE45mbflY
+
+---
+
 ## 🚀 Funcionalidades
 
 ### 👤 Alunos
@@ -196,7 +202,3 @@ Execute a classe `Main.java`. O sistema verificará a conexão com o banco ao in
 - As aulas criadas ficam em memória (lista `aulasDisponiveis` em `Main`); não são persistidas no banco nesta versão.
 - A classe `ConexaoBD` em `dao/` está vazia; a conexão é gerenciada por `database/Conexao`.
 - A classe `Usuario` possui `exibirPermissoes()` lançando `UnsupportedOperationException`, indicando que a autenticação ainda não foi implementada.
-
-## Link video
-
-https://youtu.be/qHZE45mbflY
