@@ -10,28 +10,40 @@ import java.util.List;
 
 public class AlunoDao {
 
-    public void inserir(Aluno aluno) {
-        String sql = "INSERT INTO alunos (nome, cpf, endereco, data_nascimento, telefone, email, id_plano) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = Conexao.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+   public void inserir(Aluno aluno) {
+    String sql = "INSERT INTO alunos (nome, cpf, endereco, data_nascimento, telefone, email, id_plano) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    try (Connection conn = Conexao.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setString(1, aluno.getNome());
-            stmt.setString(2, aluno.getCpf());
-            stmt.setString(3, aluno.getEndereco());
-            stmt.setDate(4, Date.valueOf(aluno.getDataNascimento()));
-            stmt.setString(5, aluno.getTel());
-            stmt.setString(6, aluno.getEmail());
-            stmt.setLong(7, aluno.getIdPlano()); // FK obrigatória no banco
-            stmt.executeUpdate();
+        stmt.setString(1, aluno.getNome());
+        stmt.setString(2, aluno.getCpf());
+        stmt.setString(3, aluno.getEndereco());
+        stmt.setDate(4, Date.valueOf(aluno.getDataNascimento()));
+        stmt.setString(5, aluno.getTel());
+        stmt.setString(6, aluno.getEmail());
+        stmt.setLong(7, aluno.getIdPlano());
 
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) aluno.setId((long) rs.getInt(1));
+        // DEBUG — mostra exatamente o que vai ser enviado
+        System.out.println("DEBUG nome: "          + aluno.getNome());
+        System.out.println("DEBUG cpf: "           + aluno.getCpf());
+        System.out.println("DEBUG endereco: "      + aluno.getEndereco());
+        System.out.println("DEBUG dataNasc: "      + aluno.getDataNascimento());
+        System.out.println("DEBUG tel: "           + aluno.getTel());
+        System.out.println("DEBUG email: "         + aluno.getEmail());
+        System.out.println("DEBUG idPlano: "       + aluno.getIdPlano());
 
-            System.out.println("Aluno inserido com sucesso!");
-        } catch (SQLException e) {
-            System.err.println("Erro ao inserir aluno: " + e.getMessage());
-        }
+        stmt.executeUpdate();
+
+        ResultSet rs = stmt.getGeneratedKeys();
+        if (rs.next()) aluno.setId((long) rs.getInt(1));
+
+        System.out.println("Aluno inserido com sucesso! ID gerado: " + aluno.getId());
+
+    } catch (SQLException e) {
+        System.err.println("Erro ao inserir aluno: " + e.getMessage());
+        e.printStackTrace();
     }
+}
 
     public List<Aluno> buscarTodos() {
         List<Aluno> lista = new ArrayList<>();

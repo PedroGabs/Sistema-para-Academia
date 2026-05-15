@@ -23,23 +23,41 @@ public class Main {
     private static InscricaoService inscricaoService = new InscricaoService();
     private static java.util.List<Aula> aulasDisponiveis = new java.util.ArrayList<>();
 
+    // ─── CORES ANSI ───────────────────────────────────────────
+    static final String RESET  = "\u001B[0m";
+    static final String BOLD   = "\u001B[1m";
+    static final String CYAN   = "\u001B[36m";
+    static final String GREEN  = "\u001B[32m";
+    static final String RED    = "\u001B[31m";
+    static final String YELLOW = "\u001B[33m";
+    static final String BLUE   = "\u001B[34m";
+    static final String WHITE  = "\u001B[37m";
+
     public static void main(String[] args) {
-        System.out.println("Verificando conexão com o Supabase...");
+        limparTela();
+        printBanner();
+
+        System.out.println(CYAN + "  Verificando conexão com o Supabase..." + RESET);
         try (java.sql.Connection conn = database.Conexao.getConnection()) {
             if (conn != null && !conn.isClosed()) {
-                System.out.println("✅ CONEXÃO ESTABELECIDA COM SUCESSO!");
+                printSucesso("Conexão estabelecida com sucesso!");
             } else {
-                System.err.println("❌ FALHA NA CONEXÃO: Verifique seu db.properties");
+                printErro("Falha na conexão. Verifique seu db.properties");
             }
         } catch (java.sql.SQLException e) {
-            System.err.println("❌ ERRO DE SQL: " + e.getMessage());
+            printErro("Erro de SQL: " + e.getMessage());
         }
+
+        pausar();
 
         int opcao;
         do {
+            limparTela();
             exibirMenu();
+            System.out.print(BOLD + CYAN + "  ▶ Escolha uma opção: " + RESET);
             opcao = scanner.nextInt();
             scanner.nextLine();
+            limparTela();
 
             switch (opcao) {
                 case 1:  cadastrarAluno();      break;
@@ -52,74 +70,146 @@ public class Main {
                 case 8:  listarPlanos();        break;
                 case 9:  criarAula();           break;
                 case 10: inscreverEmAula();     break;
-                case 0:  System.out.println("Encerrando sistema..."); break;
-                default: System.out.println("Opção inválida!");
+                case 0:
+                    limparTela();
+                    printBanner();
+                    System.out.println(YELLOW + "  Até logo! Sistema encerrado.\n" + RESET);
+                    break;
+                default:
+                    printErro("Opção inválida!");
             }
+
+            if (opcao != 0) pausar();
+
         } while (opcao != 0);
 
         scanner.close();
     }
 
-    private static void exibirMenu() {
-        System.out.println("\n=== SISTEMA DE ACADEMIA ===");
-        System.out.println("-- ALUNOS --");
-        System.out.println("1.  Cadastrar Aluno");
-        System.out.println("2.  Listar Alunos");
-        System.out.println("3.  Atualizar Aluno");
-        System.out.println("4.  Remover Aluno");
-        System.out.println("-- INSTRUTORES --");
-        System.out.println("5.  Cadastrar Instrutor");
-        System.out.println("6.  Listar Instrutores");
-        System.out.println("-- PLANOS --");
-        System.out.println("7.  Cadastrar Plano");
-        System.out.println("8.  Listar Planos");
-        System.out.println("-- AULAS --");
-        System.out.println("9.  Criar Aula");
-        System.out.println("10. Inscrever Aluno em Aula");
-        System.out.println("0.  Sair");
-        System.out.print("Escolha uma opção: ");
+    // ─── BANNER ───────────────────────────────────────────────
+    private static void printBanner() {
+        System.out.println(CYAN + BOLD);
+        System.out.println("  ╔══════════════════════════════════════════╗");
+        System.out.println("  ║        🏋️  SISTEMA DE ACADEMIA  🏋️        ║");
+        System.out.println("  ╚══════════════════════════════════════════╝");
+        System.out.println(RESET);
     }
 
-    private static void cadastrarAluno() {
-        System.out.println("\n--- CADASTRAR ALUNO ---");
+    // ─── MENU ─────────────────────────────────────────────────
+    private static void exibirMenu() {
+        printBanner();
+        System.out.println(BOLD + WHITE + "  ┌─────────────────────────────────────────┐");
+        System.out.println("  │             👤  ALUNOS                   │");
+        System.out.println("  ├─────────────────────────────────────────┤" + RESET);
+        System.out.println(WHITE + "  │  " + GREEN + "1" + WHITE + "  ➜  Cadastrar Aluno                    │");
+        System.out.println("  │  " + GREEN + "2" + WHITE + "  ➜  Listar Alunos                      │");
+        System.out.println("  │  " + GREEN + "3" + WHITE + "  ➜  Atualizar Aluno                    │");
+        System.out.println("  │  " + GREEN + "4" + WHITE + "  ➜  Remover Aluno                      │");
+        System.out.println(BOLD + "  ├─────────────────────────────────────────┤");
+        System.out.println("  │             🎓  INSTRUTORES              │");
+        System.out.println("  ├─────────────────────────────────────────┤" + RESET);
+        System.out.println(WHITE + "  │  " + BLUE + "5" + WHITE + "  ➜  Cadastrar Instrutor               │");
+        System.out.println("  │  " + BLUE + "6" + WHITE + "  ➜  Listar Instrutores                │");
+        System.out.println(BOLD + "  ├─────────────────────────────────────────┤");
+        System.out.println("  │             💳  PLANOS                   │");
+        System.out.println("  ├─────────────────────────────────────────┤" + RESET);
+        System.out.println(WHITE + "  │  " + YELLOW + "7" + WHITE + "  ➜  Cadastrar Plano                   │");
+        System.out.println("  │  " + YELLOW + "8" + WHITE + "  ➜  Listar Planos                     │");
+        System.out.println(BOLD + "  ├─────────────────────────────────────────┤");
+        System.out.println("  │             📅  AULAS                    │");
+        System.out.println("  ├─────────────────────────────────────────┤" + RESET);
+        System.out.println(WHITE + "  │  " + CYAN + "9" + WHITE + "  ➜  Criar Aula                        │");
+        System.out.println("  │  " + CYAN + "10" + WHITE + " ➜  Inscrever Aluno em Aula           │");
+        System.out.println(BOLD + "  ├─────────────────────────────────────────┤" + RESET);
+        System.out.println(WHITE + "  │  " + RED + "0" + WHITE + "  ➜  Sair                              │");
+        System.out.println(BOLD + WHITE + "  └─────────────────────────────────────────┘" + RESET);
+        System.out.println();
+    }
 
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
+    // ─── HELPERS VISUAIS ──────────────────────────────────────
+    private static void printTitulo(String titulo) {
+        System.out.println();
+        System.out.println(BOLD + CYAN + "  ╔══════════════════════════════════════════╗");
+        System.out.printf( "  ║  %-42s║%n", titulo);
+        System.out.println("  ╚══════════════════════════════════════════╝" + RESET);
+        System.out.println();
+    }
+
+    private static void printSucesso(String msg) {
+        System.out.println(GREEN + BOLD + "  ✅ " + msg + RESET);
+    }
+
+    private static void printErro(String msg) {
+        System.out.println(RED + BOLD + "  ❌ " + msg + RESET);
+    }
+
+    private static void printAviso(String msg) {
+        System.out.println(YELLOW + BOLD + "  ⚠️  " + msg + RESET);
+    }
+
+    private static void printSeparador() {
+        System.out.println(WHITE + "  ──────────────────────────────────────────" + RESET);
+    }
+
+    private static void limparTela() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    private static void pausar() {
+        System.out.println();
+        System.out.print(WHITE + "  Pressione ENTER para continuar..." + RESET);
+        scanner.nextLine();
+    }
+
+    private static String input(String label) {
+        System.out.print(BOLD + "  " + label + RESET);
+        return scanner.nextLine();
+    }
+
+    // ─── ALUNOS ───────────────────────────────────────────────
+    private static void cadastrarAluno() {
+        printTitulo("👤 CADASTRAR ALUNO");
+
+        String nome = input("Nome: ");
 
         String cpf;
         while (true) {
-            System.out.print("CPF (000.000.000-00): ");
-            cpf = scanner.nextLine();
+            cpf = input("CPF (000.000.000-00): ");
             if (ValidadorCPF.validar(cpf)) break;
-            System.out.println("❌ CPF inválido! Tente novamente.");
+            printErro("CPF inválido! Tente novamente.");
         }
 
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
+        String email    = input("Email: ");
+        String tel      = input("Telefone: ");
+        String endereco = input("Endereço: ");
 
-        System.out.print("Telefone: ");
-        String tel = scanner.nextLine();
-
-        System.out.print("Endereço: ");
-        String endereco = scanner.nextLine();
-
-        System.out.print("Data de nascimento (AAAA-MM-DD): ");
-        LocalDate dataNasc = LocalDate.parse(scanner.nextLine());
+        LocalDate dataNasc;
+        while (true) {
+            try {
+                dataNasc = LocalDate.parse(input("Data de nascimento (AAAA-MM-DD): "));
+                break;
+            } catch (Exception e) {
+                printErro("Data inválida! Use o formato AAAA-MM-DD.");
+            }
+        }
 
         List<Plano> planos = planoDAO.buscarTodos();
         if (planos.isEmpty()) {
-            System.out.println("❌ Nenhum plano cadastrado. Cadastre um plano primeiro.");
+            printAviso("Nenhum plano cadastrado. Cadastre um plano primeiro.");
             return;
         }
 
-        System.out.println("Planos disponíveis:");
+        System.out.println();
+        System.out.println(BOLD + "  Planos disponíveis:" + RESET);
+        printSeparador();
         for (Plano p : planos) {
-            System.out.println("  [" + p.getId() + "] " + p.getNome()
-                + " - " + Formatador.formatarDinheiro(p.getValor()));
+            System.out.println("  [" + YELLOW + p.getId() + RESET + "] "
+                + p.getNome() + " → " + GREEN + Formatador.formatarDinheiro(p.getValor()) + RESET);
         }
-        System.out.print("ID do plano: ");
-        int idPlano = scanner.nextInt();
-        scanner.nextLine();
+        printSeparador();
+
+        int idPlano = Integer.parseInt(input("ID do plano: "));
 
         Aluno aluno = new Aluno(nome, 0);
         aluno.setCpf(cpf);
@@ -131,68 +221,59 @@ public class Main {
 
         alunoDao.inserir(aluno);
         aluno.registrarLog("Aluno cadastrado no sistema.");
+        printSucesso("Aluno '" + nome + "' cadastrado com sucesso!");
     }
 
     private static void listarAlunos() {
-        System.out.println("\n--- LISTA DE ALUNOS ---");
+        printTitulo("👤 LISTA DE ALUNOS");
         List<Aluno> alunos = alunoDao.buscarTodos();
         if (alunos.isEmpty()) {
-            System.out.println("Nenhum aluno cadastrado.");
+            printAviso("Nenhum aluno cadastrado.");
             return;
         }
         for (Aluno a : alunos) {
-            System.out.println(a);
-            System.out.println("Histórico: " + a.obterHistorico());
-            System.out.println("-------------------");
+            printSeparador();
+            System.out.println("  " + BOLD + a.getNome() + RESET
+                + "  (ID: " + CYAN + a.getId() + RESET + ")");
+            System.out.println("  📧 " + a.getEmail()
+                + "  |  📞 " + a.getTel());
+            System.out.println("  💳 Plano: " + GREEN
+                + (a.getPlano() != null ? a.getPlano().getNome() : "Nenhum") + RESET);
+            System.out.println("  📋 Histórico: " + a.obterHistorico());
         }
+        printSeparador();
     }
 
     private static void atualizarAluno() {
-        System.out.println("\n--- ATUALIZAR ALUNO ---");
+        printTitulo("✏️  ATUALIZAR ALUNO");
 
         List<Aluno> alunos = alunoDao.buscarTodos();
-        if (alunos.isEmpty()) {
-            System.out.println("Nenhum aluno cadastrado.");
-            return;
-        }
-        System.out.println("Alunos cadastrados:");
-        for (Aluno a : alunos) {
-            System.out.println("  [" + a.getId() + "] " + a.getNome());
-        }
+        if (alunos.isEmpty()) { printAviso("Nenhum aluno cadastrado."); return; }
 
-        System.out.print("ID do aluno: ");
-        Long id = scanner.nextLong();
-        scanner.nextLine();
+        for (Aluno a : alunos)
+            System.out.println("  [" + CYAN + a.getId() + RESET + "] " + a.getNome());
 
-        System.out.print("Novo nome: ");
-        String nome = scanner.nextLine();
-
-        System.out.print("Novo email: ");
-        String email = scanner.nextLine();
-
-        System.out.print("Novo telefone: ");
-        String tel = scanner.nextLine();
-
-        System.out.print("Novo endereço: ");
-        String endereco = scanner.nextLine();
+        Long id = Long.parseLong(input("\nID do aluno: "));
+        String nome     = input("Novo nome: ");
+        String email    = input("Novo email: ");
+        String tel      = input("Novo telefone: ");
+        String endereco = input("Novo endereço: ");
 
         String cpf;
         while (true) {
-            System.out.print("Novo CPF (000.000.000-00): ");
-            cpf = scanner.nextLine();
+            cpf = input("Novo CPF (000.000.000-00): ");
             if (ValidadorCPF.validar(cpf)) break;
-            System.out.println("❌ CPF inválido! Tente novamente.");
+            printErro("CPF inválido!");
         }
 
         List<Plano> planos = planoDAO.buscarTodos();
-        System.out.println("Planos disponíveis:");
-        for (Plano p : planos) {
-            System.out.println("  [" + p.getId() + "] " + p.getNome()
-                + " - " + Formatador.formatarDinheiro(p.getValor()));
-        }
-        System.out.print("ID do novo plano: ");
-        Long idPlano = scanner.nextLong();
-        scanner.nextLine();
+        printSeparador();
+        for (Plano p : planos)
+            System.out.println("  [" + YELLOW + p.getId() + RESET + "] "
+                + p.getNome() + " → " + GREEN + Formatador.formatarDinheiro(p.getValor()) + RESET);
+        printSeparador();
+
+        Long idPlano = Long.parseLong(input("ID do novo plano: "));
 
         Aluno aluno = new Aluno(nome, 0);
         aluno.setId(id);
@@ -204,52 +285,49 @@ public class Main {
 
         alunoDao.atualizar(aluno);
         aluno.registrarLog("Dados atualizados.");
+        printSucesso("Aluno atualizado com sucesso!");
     }
 
     private static void deletarAluno() {
-        System.out.println("\n--- REMOVER ALUNO ---");
+        printTitulo("🗑️  REMOVER ALUNO");
 
         List<Aluno> alunos = alunoDao.buscarTodos();
-        if (alunos.isEmpty()) {
-            System.out.println("Nenhum aluno cadastrado.");
-            return;
-        }
-        System.out.println("Alunos cadastrados:");
-        for (Aluno a : alunos) {
-            System.out.println("  [" + a.getId() + "] " + a.getNome());
-        }
+        if (alunos.isEmpty()) { printAviso("Nenhum aluno cadastrado."); return; }
 
-        System.out.print("ID do aluno: ");
-        Long id = scanner.nextLong();
-        scanner.nextLine();
+        for (Aluno a : alunos)
+            System.out.println("  [" + RED + a.getId() + RESET + "] " + a.getNome());
+
+        Long id = Long.parseLong(input("\nID do aluno a remover: "));
         alunoDao.deletar(id);
+        printSucesso("Aluno removido com sucesso!");
     }
 
+    // ─── INSTRUTORES ──────────────────────────────────────────
     private static void cadastrarInstrutor() {
-        System.out.println("\n--- CADASTRAR INSTRUTOR ---");
+        printTitulo("🎓 CADASTRAR INSTRUTOR");
 
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
+        String nome = input("Nome: ");
 
         String cpf;
         while (true) {
-            System.out.print("CPF (000.000.000-00): ");
-            cpf = scanner.nextLine();
+            cpf = input("CPF (000.000.000-00): ");
             if (ValidadorCPF.validar(cpf)) break;
-            System.out.println("❌ CPF inválido! Tente novamente.");
+            printErro("CPF inválido! Tente novamente.");
         }
 
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
+        String email    = input("Email: ");
+        String tel      = input("Telefone: ");
+        String endereco = input("Endereço: ");
 
-        System.out.print("Telefone: ");
-        String tel = scanner.nextLine();
-
-        System.out.print("Endereço: ");
-        String endereco = scanner.nextLine();
-
-        System.out.print("Data de nascimento (AAAA-MM-DD): ");
-        LocalDate dataNasc = LocalDate.parse(scanner.nextLine());
+        LocalDate dataNasc;
+        while (true) {
+            try {
+                dataNasc = LocalDate.parse(input("Data de nascimento (AAAA-MM-DD): "));
+                break;
+            } catch (Exception e) {
+                printErro("Data inválida! Use o formato AAAA-MM-DD.");
+            }
+        }
 
         Instrutor instrutor = new Instrutor(nome, 0);
         instrutor.setCpf(cpf);
@@ -260,119 +338,119 @@ public class Main {
 
         instrutorDao.inserir(instrutor);
         instrutor.registrarLog("Instrutor cadastrado no sistema.");
+        printSucesso("Instrutor '" + nome + "' cadastrado com sucesso!");
     }
 
     private static void listarInstrutores() {
-        System.out.println("\n--- LISTA DE INSTRUTORES ---");
+        printTitulo("🎓 LISTA DE INSTRUTORES");
         List<Instrutor> instrutores = instrutorDao.buscarTodos();
-        if (instrutores.isEmpty()) {
-            System.out.println("Nenhum instrutor cadastrado.");
-            return;
-        }
+        if (instrutores.isEmpty()) { printAviso("Nenhum instrutor cadastrado."); return; }
+
         for (Instrutor i : instrutores) {
-            System.out.println(i);
-            System.out.println("-------------------");
+            printSeparador();
+            System.out.println("  " + BOLD + i.getNome() + RESET
+                + "  (ID: " + CYAN + i.getId() + RESET + ")");
+            System.out.println("  📧 " + i.getEmail() + "  |  📞 " + i.getTel());
+            System.out.println("  👥 Alunos: " + GREEN + i.getAlunos().size() + RESET);
         }
+        printSeparador();
     }
 
+    // ─── PLANOS ───────────────────────────────────────────────
     private static void cadastrarPlano() {
-        System.out.println("\n--- CADASTRAR PLANO ---");
+        printTitulo("💳 CADASTRAR PLANO");
 
-        System.out.print("Nome do plano: ");
-        String nome = scanner.nextLine();
-
-        System.out.print("Valor (ex: 99.90): ");
-        double valor = scanner.nextDouble();
-        scanner.nextLine();
+        String nome  = input("Nome do plano: ");
+        double valor = Double.parseDouble(input("Valor (ex: 99.90): "));
 
         Plano plano = new Plano(nome, valor);
         planoDAO.inserir(plano);
-
-        System.out.println("✅ Plano '" + nome + "' cadastrado por "
+        printSucesso("Plano '" + nome + "' cadastrado por "
             + Formatador.formatarDinheiro(valor));
     }
 
     private static void listarPlanos() {
-        System.out.println("\n--- LISTA DE PLANOS ---");
+        printTitulo("💳 LISTA DE PLANOS");
         List<Plano> planos = planoDAO.buscarTodos();
-        if (planos.isEmpty()) {
-            System.out.println("Nenhum plano cadastrado.");
-            return;
-        }
+        if (planos.isEmpty()) { printAviso("Nenhum plano cadastrado."); return; }
+
         for (Plano p : planos) {
-            p.imprimirDetalhes();
-            System.out.println("-------------------");
+            printSeparador();
+            System.out.println("  " + BOLD + p.getNome() + RESET
+                + "  (ID: " + CYAN + p.getId() + RESET + ")");
+            System.out.println("  💰 Valor: " + GREEN
+                + Formatador.formatarDinheiro(p.getValor()) + RESET);
         }
+        printSeparador();
     }
 
+    // ─── AULAS ────────────────────────────────────────────────
     private static void criarAula() {
-        System.out.println("\n--- CRIAR AULA ---");
+        printTitulo("📅 CRIAR AULA");
 
-        System.out.print("Nome da aula: ");
-        String nome = scanner.nextLine();
+        String nome = input("Nome da aula: ");
 
-        System.out.print("Data e hora (AAAA-MM-DDTHH:MM): ");
-        LocalDateTime dataHora = LocalDateTime.parse(scanner.nextLine());
+        LocalDateTime dataHora;
+        while (true) {
+            try {
+                dataHora = LocalDateTime.parse(input("Data e hora (AAAA-MM-DDTHH:MM): "));
+                break;
+            } catch (Exception e) {
+                printErro("Formato inválido! Use AAAA-MM-DDTHH:MM (ex: 2025-06-10T08:00)");
+            }
+        }
 
-        System.out.print("Capacidade máxima: ");
-        int capacidade = scanner.nextInt();
-        scanner.nextLine();
+        int capacidade = Integer.parseInt(input("Capacidade máxima: "));
 
         List<Instrutor> instrutores = instrutorDao.buscarTodos();
         if (instrutores.isEmpty()) {
-            System.out.println("❌ Nenhum instrutor cadastrado. Cadastre um instrutor primeiro.");
+            printAviso("Nenhum instrutor cadastrado. Cadastre um instrutor primeiro.");
             return;
         }
-        System.out.println("Instrutores disponíveis:");
-        for (int i = 0; i < instrutores.size(); i++) {
-            System.out.println("  [" + i + "] " + instrutores.get(i).getNome());
-        }
-        System.out.print("Número do instrutor: ");
-        int idx = scanner.nextInt();
-        scanner.nextLine();
+
+        printSeparador();
+        for (int i = 0; i < instrutores.size(); i++)
+            System.out.println("  [" + BLUE + i + RESET + "] " + instrutores.get(i).getNome());
+        printSeparador();
+
+        int idx = Integer.parseInt(input("Número do instrutor: "));
 
         Aula aula = new Aula(nome, dataHora, capacidade, instrutores.get(idx));
         aulasDisponiveis.add(aula);
-
-        System.out.println("✅ Aula '" + nome + "' criada para "
-            + Formatador.formatarData(dataHora)
-            + " com " + capacidade + " vagas!");
+        printSucesso("Aula '" + nome + "' criada para "
+            + Formatador.formatarData(dataHora) + " com " + capacidade + " vagas!");
     }
 
     private static void inscreverEmAula() {
-        System.out.println("\n--- INSCREVER ALUNO EM AULA ---");
+        printTitulo("📅 INSCREVER ALUNO EM AULA");
 
-        if (aulasDisponiveis.isEmpty()) {
-            System.out.println("❌ Nenhuma aula criada ainda.");
-            return;
-        }
+        if (aulasDisponiveis.isEmpty()) { printAviso("Nenhuma aula criada ainda."); return; }
 
         List<Aluno> alunos = alunoDao.buscarTodos();
-        if (alunos.isEmpty()) {
-            System.out.println("❌ Nenhum aluno cadastrado.");
-            return;
-        }
+        if (alunos.isEmpty()) { printAviso("Nenhum aluno cadastrado."); return; }
 
-        System.out.println("Alunos:");
-        for (int i = 0; i < alunos.size(); i++) {
-            System.out.println("  [" + i + "] " + alunos.get(i).getNome()
+        System.out.println(BOLD + "  Alunos:" + RESET);
+        printSeparador();
+        for (int i = 0; i < alunos.size(); i++)
+            System.out.println("  [" + GREEN + i + RESET + "] " + alunos.get(i).getNome()
                 + " | Plano: " + (alunos.get(i).getPlano() != null
-                    ? alunos.get(i).getPlano().getNome() : "Nenhum"));
-        }
-        System.out.print("Número do aluno: ");
-        int idxAluno = scanner.nextInt();
-        scanner.nextLine();
+                    ? alunos.get(i).getPlano().getNome() : YELLOW + "Nenhum" + RESET));
+        printSeparador();
 
-        System.out.println("Aulas disponíveis:");
+        int idxAluno = Integer.parseInt(input("Número do aluno: "));
+
+        System.out.println();
+        System.out.println(BOLD + "  Aulas disponíveis:" + RESET);
+        printSeparador();
         for (int i = 0; i < aulasDisponiveis.size(); i++) {
             Aula a = aulasDisponiveis.get(i);
-            System.out.println("  [" + i + "] " + a.getNome()
+            System.out.println("  [" + CYAN + i + RESET + "] " + a.getNome()
                 + " | " + Formatador.formatarData(a.getDataHora())
-                + " | Vagas: " + a.vagasDisponiveis() + "/" + a.getCapacidadeMaxima());
+                + " | Vagas: " + GREEN + a.vagasDisponiveis() + "/" + a.getCapacidadeMaxima() + RESET);
         }
-        System.out.print("Número da aula: ");
-        int idxAula = scanner.nextInt();
-        scanner.nextLine();
+        printSeparador();
+
+        int idxAula = Integer.parseInt(input("Número da aula: "));
 
         inscricaoService.inscreverAluno(alunos.get(idxAluno), aulasDisponiveis.get(idxAula));
     }
